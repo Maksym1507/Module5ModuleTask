@@ -4,9 +4,12 @@ import User from "./pages/User";
 import { FC } from "react";
 import ResourceList from "./pages/ResourceList";
 import Resource from "./pages/Resource";
-import CreateUser from "./pages/CreateUser";
-import UpdateUser from "./pages/UpdateUser";
+import CreateEmployee from "./pages/Employee/CreateEmployee";
+import UpdateEmployee from "./pages/Employee/UpdateEmployee";
 import NoMatchComponent from "./pages/NoMatch/NoMatch";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import EmployeeList from "./pages/Employee/EmployeeList";
 
 interface Route {
   key: string;
@@ -32,20 +35,6 @@ export const routes: Array<Route> = [
     component: User,
   },
   {
-    key: "create-user-route",
-    title: "Create user",
-    path: "/createUser",
-    enabled: true,
-    component: CreateUser,
-  },
-  {
-    key: "update-user-route",
-    title: "Update user",
-    path: "/updateUser",
-    enabled: true,
-    component: UpdateUser,
-  },
-  {
     key: "resource-list-route",
     title: "Resource List",
     path: "/resource",
@@ -53,11 +42,46 @@ export const routes: Array<Route> = [
     component: ResourceList,
   },
   {
+    key: "employee-list-route",
+    title: "Employee",
+    path: "/employee",
+    enabled: true,
+    component: EmployeeList,
+  },
+  {
+    key: "create-employee-route",
+    title: "Create Employee",
+    path: "/createEmployee",
+    enabled: true,
+    component: CreateEmployee,
+  },
+  {
+    key: "update-employee-route",
+    title: "Update employee",
+    path: "employee/:id/updateEmployee",
+    enabled: false,
+    component: UpdateEmployee,
+  },
+  {
     key: "resource-route",
     title: "Resource",
     path: "/resource/:id",
     enabled: false,
     component: Resource,
+  },
+  {
+    key: "login-route",
+    title: "Login",
+    path: "/login",
+    enabled: true,
+    component: Login,
+  },
+  {
+    key: "register-route",
+    title: "Register",
+    path: "/register",
+    enabled: true,
+    component: Register,
   },
   {
     key: "no-match-route",

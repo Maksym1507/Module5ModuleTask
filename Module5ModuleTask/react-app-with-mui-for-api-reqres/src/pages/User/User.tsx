@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, useEffect, useState } from "react";
+import React, { ReactElement, FC, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -8,61 +8,62 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import * as userApi from "../../api/modules/users";
-import { IUser } from "../../interfaces/users";
 import { useParams } from "react-router-dom";
+import NoMatch from "../NoMatch";
+import { homeStore } from "../../App";
+import { observer } from "mobx-react-lite";
 
-const User: FC<any> = (): ReactElement => {
-  const [user, setUser] = useState<IUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+const User: FC<any> = observer((): ReactElement => {
   const { id } = useParams();
 
   useEffect(() => {
-    if (id) {
-      const getUser = async () => {
-        try {
-          setIsLoading(true);
-          const res = await userApi.getUserById(id);
-          setUser(res.data);
-        } catch (e) {
-          if (e instanceof Error) {
-            console.error(e.message);
-          }
-        }
-        setIsLoading(false);
-      };
-      getUser();
-    }
+    (async () => {
+      if (id) {
+        await homeStore.getSingleUser(id);
+      }
+    })();
   }, [id]);
 
-  return (
-    <Container>
-      <Grid container spacing={4} justifyContent="center" m={4}>
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <>
-            <Card sx={{ maxWidth: 250 }}>
-              <CardMedia
-                component="img"
-                height="250"
-                image={user?.avatar}
-                alt={user?.email}
-              />
-              <CardContent>
-                <Typography noWrap gutterBottom variant="h6" component="div">
-                  {user?.email}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {user?.first_name} {user?.last_name}
-                </Typography>
-              </CardContent>
-            </Card>
-          </>
-        )}
-      </Grid>
-    </Container>
-  );
-};
+  if (homeStore.singleUser) {
+    debugger;
+    if (homeStore.singleUser.id) {
+      return (
+        <Container>
+          <Grid container spacing={4} justifyContent="center" m={4}>
+            {homeStore.isLoading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <Card sx={{ maxWidth: 250 }}>
+                  <CardMedia
+                    component="img"
+                    height="250"
+                    image={homeStore.singleUser?.avatar}
+                    alt={homeStore.singleUser?.email}
+                  />
+                  <CardContent>
+                    <Typography
+                      noWrap
+                      gutterBottom
+                      variant="h6"
+                      component="div"
+                    >
+                      {homeStore.singleUser?.email}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {homeStore.singleUser?.first_name}{" "}
+                      {homeStore.singleUser?.last_name}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </Grid>
+        </Container>
+      );
+    }
+  }
+  return <NoMatch />;
+});
 
 export default User;

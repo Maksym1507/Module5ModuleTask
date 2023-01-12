@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC, ReactElement, useContext } from "react";
 import {
   Box,
   Link,
@@ -10,10 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { routes } from "../../routes";
 import { NavLink } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { AppStoreContext } from "../../App";
 
-const Navbar: FC = (): ReactElement => {
+const Navbar: FC = observer((): ReactElement => {
+  const appStore = useContext(AppStoreContext);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event: any) => {
@@ -42,7 +46,7 @@ const Navbar: FC = (): ReactElement => {
               display: { xs: "none", md: "flex" },
             }}
           >
-            A-LEVEL COURSE
+            <span style={{ color: "white" }}>A-LEVEL COURSE</span>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -53,7 +57,7 @@ const Navbar: FC = (): ReactElement => {
               onClick={handleOpenNavMenu}
               color="inherit"
             >
-              <MenuIcon />
+              <MenuIcon style={{ color: "white" }} />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -98,7 +102,7 @@ const Navbar: FC = (): ReactElement => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            A-LEVEL COURSE
+            <span style={{ color: "white" }}>A-LEVEL COURSE</span>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Box
@@ -117,7 +121,7 @@ const Navbar: FC = (): ReactElement => {
                       key={page.key}
                       component={NavLink}
                       to={page.path}
-                      color="black"
+                      color="white"
                       underline="none"
                       variant="button"
                       sx={{ fontSize: "large", marginLeft: "2rem" }}
@@ -128,10 +132,24 @@ const Navbar: FC = (): ReactElement => {
               )}
             </Box>
           </Box>
+          {!!appStore.authStore.token && (
+            <Link
+              component={NavLink}
+              to={"/login"}
+              className="mt-3 mb-3 cursor-pointer material-icons"
+              color="white"
+              underline="none"
+              variant="button"
+              sx={{ fontSize: "large", marginLeft: "2rem" }}
+              onClick={() => (appStore.authStore.token = "")}
+            >
+              <LogoutIcon />
+            </Link>
+          )}
         </Toolbar>
       </Container>
     </Box>
   );
-};
+});
 
 export default Navbar;
